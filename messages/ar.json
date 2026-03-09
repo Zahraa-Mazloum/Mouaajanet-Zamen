@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "products": "المنتجات",
+    "contact": "تواصل معنا",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "wishlist": "المفضلة",
+    "cart": "السلة",
+    "search": "بحث...",
+    "account": "حسابي"
+  },
+  "auth": {
+    "welcomeBack": "أهلاً بعودتك",
+    "signInToContinue": "سجّل دخولك للمتابعة",
+    "createAccount": "إنشاء حساب",
+    "signUpToStart": "سجّل للبدء",
+    "phoneNumber": "رقم الهاتف",
+    "phoneHint": "أدخل رمز البلد، مثال: 961+",
+    "phonePlaceholder": "9611234567+",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "أدخل اسمك الكامل",
+    "signIn": "تسجيل الدخول",
+    "signingIn": "جارٍ تسجيل الدخول...",
+    "createBtn": "إنشاء الحساب",
+    "creating": "جارٍ الإنشاء...",
+    "noAccount": "ليس لديك حساب؟ سجّل الآن",
+    "hasAccount": "لديك حساب؟ سجّل الدخول",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "enterOtp": "أدخل رمز التحقق",
+    "otpSent": "أرسلنا رمزاً مكوناً من 6 أرقام إلى {phone} عبر واتساب",
+    "verify": "تحقق",
+    "verifying": "جارٍ التحقق...",
+    "resendOtp": "إعادة إرسال الرمز",
+    "backToPhone": "→ استخدام رقم مختلف",
+    "setPassword": "إنشاء كلمة المرور",
+    "setPasswordHint": "اختر كلمة مرور قوية لحسابك"
+  },
+  "common": {
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ ما",
+    "retry": "حاول مجدداً",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد"
+  }
+}

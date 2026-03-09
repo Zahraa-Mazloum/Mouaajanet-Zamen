@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "contact": "Contact Us",
+    "login": "Login",
+    "logout": "Logout",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "search": "Search...",
+    "account": "My Account"
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "signInToContinue": "Sign in to your account to continue",
+    "createAccount": "Create Account",
+    "signUpToStart": "Sign up to get started",
+    "phoneNumber": "Phone Number",
+    "phoneHint": "Include country code, e.g. +961",
+    "phonePlaceholder": "+9611234567",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "createBtn": "Create Account",
+    "creating": "Creating account...",
+    "noAccount": "Don't have an account? Sign up",
+    "hasAccount": "Already have an account? Sign in",
+    "forgotPassword": "Forgot password?",
+    "enterOtp": "Enter Verification Code",
+    "otpSent": "We sent a 6-digit code to {phone} on WhatsApp",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "resendOtp": "Resend code",
+    "backToPhone": "← Use a different number",
+    "setPassword": "Set Your Password",
+    "setPasswordHint": "Choose a strong password for your account"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}
