@@ -1,26 +1,195 @@
-@import "tailwindcss";
+/* src/app/globals.css */
 
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ── Enable class-based dark mode (Tailwind v4 syntax) ────── */
+/* This tells Tailwind: apply dark: variants when .dark class  */
+/* is on <html>. We'll add/remove it via ThemeProvider.        */
+@variant dark (&:where(.dark, .dark *));
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE TOKENS (default)
+═══════════════════════════════════════════════════════════ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ── Backgrounds ── */
+  --mainbackground:       #F8F4EE;
+  --secondarybackground:  #E8DCCB;
+  --cardbackground:       #EFE6D8;
+  --bgcolor:              #ECE7D1;
+
+  /* ── Text ── */
+  --primarytext:   #111111;
+  --secondarytext: #2A2A2A;
+  --mutedtext:     #5C5C5C;
+  --mainheading:   #3a1a0b;
+  --foreground:    #111111;
+
+  /* ── Buttons & Accents ── */
+  --primarybutton: #512009;
+  --buttonhover:   #B08968;
+  --hovercolor:    #632c0b;
+  --focuscolor:    #ec7407;
+
+  /* ── Borders & States ── */
+  --borderaccent:  #D6C2AD;
+  --errortext:     #FF4D4F;
+  --successtext:   #52C41A;
+
+  /* ── Brand Palette ── */
+  --color1: #f6990b;
+  --color2: #ec7407;
+  --color3: #3a1a0b;
+  --color4: #f0dfb3;
+  --color5: #f8c231;
+  --color6: #632c0b;
+  --color7: #937c43;
+  --color8: #ebb963;
+  --color9: #a7681a;
+
+  /* ── Input fields ── */
+  --input-bg:      #F5EFE6;
+  --input-border:  #D6C2AD;
+  --input-text:    #111111;
+
+  /* ── Card / surface ── */
+  --card-bg:       #FFFFFF;
+  --card-shadow:   rgba(81, 32, 9, 0.08);
+
+  /* ── Navbar ── */
+  --navbar-bg:     #F8F4EE;
+  --navbar-border: #E8DCCB;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE TOKENS
+   Same variable names — just different values.
+═══════════════════════════════════════════════════════════ */
+.dark {
+  /* ── Backgrounds ── */
+  --mainbackground:      #0F0F1A;
+  --secondarybackground: #1A1A2E;
+  --cardbackground:      #1E1E35;
+  --bgcolor:             #1A1A2E;
+
+  /* ── Text ── */
+  --primarytext:   #F0F0FF;
+  --secondarytext: #CCCCEE;
+  --mutedtext:     #8888AA;
+  --mainheading:   #F5C87A;
+  --foreground:    #F0F0FF;
+
+  /* ── Buttons — brand color stays warm ── */
+  --primarybutton: #B08968;
+  --buttonhover:   #E8A838;
+  --hovercolor:    #F5C87A;
+  --focuscolor:    #F5A623;
+
+  /* ── Borders & States ── */
+  --borderaccent:  #333355;
+  --errortext:     #FF6B6B;
+  --successtext:   #6BCB77;
+
+  /* ── Brand palette — slightly lighter for dark bg ── */
+  --color1: #f6990b;
+  --color2: #F5A623;
+  --color3: #F5C87A;
+  --color4: #2A2A4E;
+  --color5: #f8c231;
+  --color6: #E8A838;
+  --color7: #B8A070;
+  --color8: #F5C87A;
+  --color9: #C8881A;
+
+  /* ── Input fields ── */
+  --input-bg:      #252545;
+  --input-border:  #333355;
+  --input-text:    #F0F0FF;
+
+  /* ── Card / surface ── */
+  --card-bg:       #1A1A2E;
+  --card-shadow:   rgba(0, 0, 0, 0.4);
+
+  /* ── Navbar ── */
+  --navbar-bg:     #0F0F1A;
+  --navbar-border: #333355;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TAILWIND THEME BRIDGE
+═══════════════════════════════════════════════════════════ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--mainbackground);
+  --color-foreground:  var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ═══════════════════════════════════════════════════════════
+   BASE STYLES
+═══════════════════════════════════════════════════════════ */
+@layer base {
+  /* Smooth color transitions when theme switches */
+  * {
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+                color 0.1s ease;
+  }
+
+  body {
+    background: var(--mainbackground);
+    color: var(--foreground);
+  }
+
+  h1 {
+    @apply text-3xl font-bold mb-4 text-center;
+  }
+
+  /* Input styling picks up dark mode automatically */
+  input {
+    background: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--input-border);
+  }
+
+  input::placeholder {
+    color: var(--mutedtext);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ═══════════════════════════════════════════════════════════
+   SCRIBBLE UNDERLINE ANIMATION
+═══════════════════════════════════════════════════════════ */
+@layer utilities {
+  .scribble-path {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    transition: stroke-dashoffset 0.4s ease;
+  }
+
+  .group:hover .scribble-path {
+    stroke-dashoffset: 0;
+  }
+
+  .scribble-active {
+    stroke-dashoffset: 0;
+    color: var(--primarybutton);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT STYLES
+═══════════════════════════════════════════════════════════ */
+@layer components {
+  ul {
+    @apply flex md:flex-row flex-col items-center gap-10;
+  }
+
+  .expand-navbar {
+    @apply md:w-auto left-0 flex justify-center items-center px-5 gap-8 transition-all duration-300;
+  }
+
+  #primaryBtn {
+    @apply flex w-fit cursor-pointer rounded-full border px-8 py-3.5 
+           max-sm:w-full text-center bg-(--primarybutton) text-white;
+  }
 }
