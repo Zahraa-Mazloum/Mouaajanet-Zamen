@@ -4,6 +4,7 @@
 import { ThemeProvider } from './ThemeProvider'
 import { CurrencyProvider } from './CurrencyProvider'
 import { NextIntlClientProvider } from 'next-intl'
+import { SessionProvider } from 'next-auth/react'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -14,6 +15,7 @@ interface ProvidersProps {
 
 export function Providers({ children, locale, messages }: ProvidersProps) {
   return (
+    <SessionProvider>
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider>
         <CurrencyProvider>
@@ -21,5 +23,6 @@ export function Providers({ children, locale, messages }: ProvidersProps) {
         </CurrencyProvider>
       </ThemeProvider>
     </NextIntlClientProvider>
+    </SessionProvider>
   )
 }

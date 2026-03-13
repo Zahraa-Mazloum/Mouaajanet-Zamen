@@ -4,15 +4,22 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
+import { useSession, signOut } from 'next-auth/react'  // ← ADD
 import ClientToggles from '@/components/ClientToggles'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const pathname = usePathname()
+  const router = useRouter()
   const t = useTranslations('nav')
   const locale = useLocale()
+
+  // ✅ useSession gives you the current auth state
+  // status: 'loading' | 'authenticated' | 'unauthenticated'
+  const { data: session, status } = useSession()
+  const isLoggedIn = status === 'authenticated'
 
   const links = [
     { name: t('home'),     path: `/${locale}` },
@@ -22,6 +29,15 @@ export default function Navbar() {
 
   function isActive(path: string): boolean {
     return pathname === path || pathname === path + '/'
+  }
+
+  // ── Logout handler ─────────────────────────────────────
+  async function handleLogout() {
+    // signOut() clears the JWT cookie
+    // redirect: false → we handle navigation ourselves
+    await signOut({ redirect: false })
+    router.push(`/${locale}`)
+    router.refresh() // force server components to re-render
   }
 
   return (
@@ -45,9 +61,9 @@ export default function Navbar() {
         </div>
 
         {/* ── Nav Links ────────────────────────────── */}
-        <div
+          <div
           className={`md:static md:min-h-fit absolute min-h-full w-full z-20
-            ${isOpen ? 'top-[17%]' : 'top-[-100%]'} expand-navbar`}
+            ${isOpen ? 'top-[1%]' : 'top-[-100%]'} expand-navbar`}
           style={{ background: isOpen ? 'var(--navbar-bg)' : 'transparent' }}
         >
           <ul>
@@ -77,6 +93,18 @@ export default function Navbar() {
 
             {/* ── Mobile extras ── */}
             <li className="flex flex-col items-center gap-4 md:hidden list-none">
+
+              {/* Show account link if logged in */}
+              {isLoggedIn && (
+                <Link
+                  href={`/${locale}/account`}
+                  onClick={() => setIsOpen(false)}
+                  className="hover:text-(--hovercolor) transition font-medium"
+                >
+                  {session?.user?.name ?? 'My Account'}
+                </Link>
+              )}
+
               <Link href={`/${locale}/wishlist`} className="hover:text-(--hovercolor) transition">
                 {t('wishlist')}
               </Link>
@@ -93,16 +121,29 @@ export default function Navbar() {
                 />
               </div>
 
-              {/* Mobile toggles */}
               <ClientToggles locale={locale} currentPath={pathname} />
 
-              <button
-                type="button"
-                id="primaryBtn"
-                onClick={() => window.location.href = `/${locale}/login`}
-              >
-                {t('login')}
-              </button>
+              {/* Mobile: Login or Logout */}
+              {isLoggedIn ? (
+                <button
+                  type="button"
+                  id="primaryBtn"
+                  onClick={handleLogout}
+                >
+                  {t('logout')}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  id="primaryBtn"
+                  onClick={() => {
+                    setIsOpen(false)
+                    router.push(`/${locale}/login`)
+                  }}
+                >
+                  {t('login')}
+                </button>
+              )}
             </li>
           </ul>
         </div>
@@ -110,7 +151,7 @@ export default function Navbar() {
         {/* ── Right side — desktop ─────────────────── */}
         <div className="flex items-center gap-3">
 
-          {/* Search — desktop */}
+          {/* Search */}
           <div className="hidden md:flex items-center bg-(--bgcolor) rounded-full px-6 py-3">
             <SearchIcon />
             <input
@@ -130,7 +171,7 @@ export default function Navbar() {
             <CartIcon />
           </Link>
 
-          {/*  ALL three toggles live here — isolated, no hydration issues */}
+          {/* Three toggles */}
           <div className="hidden md:flex">
             <ClientToggles locale={locale} currentPath={pathname} />
           </div>
@@ -139,7 +180,8 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setIsOpen(prev => !prev)}
-            className="md:hidden cursor-pointer"
+            className="md:hidden cursor-pointer z-20"
+            
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
               viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-8">
@@ -150,15 +192,42 @@ export default function Navbar() {
             </svg>
           </button>
 
-          {/* Login */}
-          <button
-            type="button"
-            id="primaryBtn"
-            className="hover:bg-(--buttonhover) hover:text-white hidden md:flex"
-            onClick={() => window.location.href = `/${locale}/login`}
-          >
-            {t('login')}
-          </button>
+          {/* ── Desktop: Login OR Account + Logout ── */}
+          {status === 'loading' ? (
+            // Prevent layout shift while session loads
+            <div className="hidden md:flex w-24 h-11 rounded-full animate-pulse"
+              style={{ background: 'var(--bgcolor)' }} />
+
+          ) : isLoggedIn ? (
+            // Logged in → show name + logout button
+            <div className="hidden md:flex items-center gap-3">
+              <Link
+                href={`/${locale}/account`}
+                className="text-sm font-medium hover:text-(--hovercolor) transition"
+              >
+                👤 {session?.user?.name?.split(' ')[0] ?? 'Account'}
+              </Link>
+              <button
+                type="button"
+                id="primaryBtn"
+                className="hover:bg-(--buttonhover) hover:text-white"
+                onClick={handleLogout}
+              >
+                {t('logout')}
+              </button>
+            </div>
+
+          ) : (
+            // Not logged in → show login button
+            <button
+              type="button"
+              id="primaryBtn"
+              className="hover:bg-(--buttonhover) hover:text-white hidden md:flex"
+              onClick={() => router.push(`/${locale}/login`)}
+            >
+              {t('login')}
+            </button>
+          )}
 
         </div>
       </nav>
