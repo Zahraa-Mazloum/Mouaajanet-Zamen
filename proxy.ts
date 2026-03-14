@@ -1,3 +1,4 @@
+//proxy.ts  
 import createMiddleware from 'next-intl/middleware'
 import { auth } from '@/lib/auth'
 import { routing } from './i18n/routing'

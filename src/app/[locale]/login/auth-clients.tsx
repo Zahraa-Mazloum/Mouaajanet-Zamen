@@ -109,11 +109,16 @@ export default function AuthClients() {
         redirect: false,
       })
 
-      if (result?.error) {
-        // NextAuth passes the error message from authorize()'s throw
-        setError(result.error)
-        return
-      }
+      // if (result?.error) {
+      //   // NextAuth passes the error message from authorize()'s throw
+      //   setError(result.code)
+      //   return
+      // }
+      if (result?.code && result.code !== 'null') {
+	  setError(result.code)   
+  return
+	}
+
 
       if (result?.ok) {
         // Login success → go to account page (or wherever they came from)

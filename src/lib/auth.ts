@@ -60,8 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // ── Validate input ───────────────────────────────
         const parsed = credentialsSchema.safeParse(credentials)
         if (!parsed.success) {
-          // throw new AuthError(parsed.error.issues[0].message)
-          return null
+          throw new AuthError(parsed.error.issues[0].message)
         }
 
         const { phone, password } = parsed.data
