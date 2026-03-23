@@ -30,7 +30,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[1].message },
+        { error: parsed.error.issues[0].message },
         { status: 400 }
       )
     }

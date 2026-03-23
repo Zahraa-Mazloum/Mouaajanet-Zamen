@@ -7,7 +7,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import BgElements from '@/components/BgElements'
-
+import TogglePass from '@/components/icons'
 // ── Types ──────────────────────────────────────────────────
 // Each step of the multi-step form
 type AuthMode = 'login' | 'register' | 'forgot'
@@ -53,6 +53,8 @@ export default function AuthClients() {
   const [error,   setError]   = useState<string>('')
   const [resendTimer, setResendTimer] = useState<number>(0)
 
+  // Toggle password visibility
+  
   // ── Reset everything when switching modes ─────────────
   function switchMode(newMode: AuthMode) {
     setMode(newMode)
@@ -115,15 +117,14 @@ export default function AuthClients() {
       //   return
       // }
       if (result?.code && result.code !== 'null') {
-	  setError(result.code)   
-  return
+	   setError(result.code) 
+      return
 	}
 
 
       if (result?.ok) {
-        // Login success → go to account page (or wherever they came from)
         router.push(`/${locale}/account`)
-        router.refresh() // Force server components to re-render with new session
+        router.refresh() 
       }
     } catch {
       setError('Something went wrong. Please try again.')
@@ -154,7 +155,7 @@ export default function AuthClients() {
       startResendTimer()
 
     } catch {
-      setError('Network error. Please check your connection.')
+        setError(t('networkError'))
     } finally {
       setLoading(false)
     }
@@ -185,7 +186,7 @@ export default function AuthClients() {
       else setForgotStep('newpassword')
 
     } catch {
-      setError('Network error. Please check your connection.')
+        setError(t('networkError'))
     } finally {
       setLoading(false)
     }
@@ -200,7 +201,7 @@ export default function AuthClients() {
 
     // Client-side check before API call
     if (password !== confirm) {
-      setError('Passwords do not match.')
+      setError(t('passwordMismatch'))
       return
     }
 
@@ -233,7 +234,7 @@ export default function AuthClients() {
       }
 
     } catch {
-      setError('Something went wrong. Please try again.')
+        setError(t('networkError'))
     } finally {
       setLoading(false)
     }
@@ -247,7 +248,7 @@ export default function AuthClients() {
     setError('')
 
     if (password !== confirm) {
-      setError('Passwords do not match.')
+      setError(t('passwordMismatch'))
       return
     }
 
@@ -277,7 +278,7 @@ export default function AuthClients() {
       }
 
     } catch {
-      setError('Something went wrong. Please try again.')
+        setError(t('networkError'))
     } finally {
       setLoading(false)
     }
@@ -307,13 +308,13 @@ export default function AuthClients() {
   // RENDER
   // ══════════════════════════════════════════════════════
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-28 md:py-11">
+    <section className="relative min-h-[86vh] flex items-center justify-center overflow-hidden px-4 ">
       <BgElements />
 
       <div className="relative z-10 w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl rounded-4xl sm:rounded-[40px] overflow-hidden shadow-2xl"
         style={{ background: 'var(--cardbackground)' }}
       >
-        {/* ── Cheese drip image — your design preserved ── */}
+        {/* ── Cheese drip image  */}
         <div className="w-full overflow-hidden max-h-30 sm:max-h-40 md:max-h-41">
           <Image
             src="/backgroundElements/Cheese.png"
@@ -416,7 +417,7 @@ export default function AuthClients() {
                 value={fullName} onChange={setFullName} required />
               <PhoneInput value={phone} onChange={setPhone} />
               <SubmitButton loading={loading}>
-                {loading ? 'Sending...' : 'Send WhatsApp Code'}
+                {loading ? t('sending') : t('sendWhatsappCode')}
               </SubmitButton>
             </form>
           )}
@@ -465,7 +466,7 @@ export default function AuthClients() {
               className="space-y-4">
               <PhoneInput value={phone} onChange={setPhone} />
               <SubmitButton loading={loading}>
-                {loading ? 'Sending...' : 'Send Reset Code'}
+                {loading ? t('sending') : t('sendWhatsappCode')}
               </SubmitButton>
               <BackButton onClick={() => switchMode('login')} />
             </form>
@@ -490,7 +491,7 @@ export default function AuthClients() {
           {mode === 'forgot' && forgotStep === 'newpassword' && (
             <form onSubmit={handleResetPassword} className="space-y-4">
               <PasswordInput
-                label="New Password"
+                label={t('newpassword')}
                 placeholder={t('passwordPlaceholder')}
                 value={password}
                 onChange={setPassword}
@@ -503,7 +504,7 @@ export default function AuthClients() {
               />
               <PasswordStrength password={password} />
               <SubmitButton loading={loading}>
-                {loading ? 'Updating...' : 'Update Password'}
+                {loading ? t('updating') : t('updatePassword')}
               </SubmitButton>
             </form>
           )}
@@ -530,11 +531,6 @@ export default function AuthClients() {
     </section>
   )
 }
-
-// ══════════════════════════════════════════════════════════
-// SMALL REUSABLE SUB-COMPONENTS
-// Extracted to keep the main component readable
-// ══════════════════════════════════════════════════════════
 
 function Input({
   label, type, placeholder, value, onChange, required = true,
@@ -566,18 +562,19 @@ function Input({
 }
 
 function PhoneInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useTranslations('auth') 
   return (
     <div>
       <label className="block text-sm font-medium mb-1"
         style={{ color: 'var(--secondarytext)' }}>
-        Phone Number
-      </label>
+       {t('phoneNumber')}
+      </label>  
       <input
         type="tel"
         required
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="+9611234567"
+        placeholder={t('phonePlaceholder')}
         className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none transition"
         style={{
           background:  'var(--input-bg)',
@@ -586,12 +583,11 @@ function PhoneInput({ value, onChange }: { value: string; onChange: (v: string) 
         }}
       />
       <p className="text-xs mt-1" style={{ color: 'var(--mutedtext)' }}>
-        Include country code, e.g. +961 for Lebanon
+        {t('phoneHint')}
   </p>
     </div>
   )
 }
-
 function PasswordInput({
   label, placeholder, value, onChange
 }: {
@@ -613,37 +609,32 @@ function PasswordInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full px-4 py-2.5 pr-10 rounded-lg border text-sm focus:outline-none transition"
+          className="w-full px-4 py-2.5 pr-12 rounded-lg border text-sm focus:outline-none transition"
           style={{
             background:  'var(--input-bg)',
             borderColor: 'var(--input-border)',
             color:       'var(--input-text)',
           }}
         />
-        {/* Show/hide password toggle */}
-        <button
-          type="button"
-          onClick={() => setShow(s => !s)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs"
-          style={{ color: 'var(--mutedtext)' }}
-        >
-          {show ? 'Hide' : 'Show'}
-        </button>
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+          <TogglePass show={show} onToggle={() => setShow(s => !s)} />
+        </div>
       </div>
     </div>
   )
 }
 
 function OtpInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useTranslations('auth')
   return (
     <div>
       <label className="block text-sm font-medium mb-1 text-center"
         style={{ color: 'var(--secondarytext)' }}>
-        6-Digit Code
+          {t('digitCode')}
       </label>
       <input
         type="text"
-        inputMode="numeric"   // shows number keyboard on mobile
+        inputMode="numeric"  
         pattern="[0-9]{6}"
         maxLength={6}
         required
@@ -708,26 +699,30 @@ function SubmitButton({ loading, children }: { loading: boolean; children: React
 }
 
 function BackButton({ onClick }: { onClick: () => void }) {
+  const t = useTranslations('auth')
   return (
     <button type="button" onClick={onClick}
       className="w-full py-2 text-sm hover:underline"
       style={{ color: 'var(--mutedtext)' }}>
-      ← Go back
+     {t('back')}
     </button>
   )
 }
 
 function ResendButton({ timer, onResend }: { timer: number; onResend: () => void }) {
+  const t = useTranslations('auth')
   return (
     <p className="text-center text-sm" style={{ color: 'var(--mutedtext)' }}>
-      Didn&apos;t receive it?{' '}
+     {t('notReceive')}{' '}
       {timer > 0 ? (
-        <span>Resend in {timer}s</span>
+        // <span>Resend in {timer}s</span>
+        <span>{t('resendIn')} {timer}s</span>
+
       ) : (
         <button type="button" onClick={onResend}
           className="font-medium hover:underline"
           style={{ color: 'var(--primarybutton)' }}>
-          Resend code
+        {t('resendOtp')}
         </button>
       )}
     </p>

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { useSession, signOut } from 'next-auth/react'  // ← ADD
+import { useSession, signOut } from 'next-auth/react'  
 import ClientToggles from '@/components/ClientToggles'
 
 export default function Navbar() {
@@ -16,7 +16,7 @@ export default function Navbar() {
   const t = useTranslations('nav')
   const locale = useLocale()
 
-  // ✅ useSession gives you the current auth state
+  //  useSession gives you the current auth state
   // status: 'loading' | 'authenticated' | 'unauthenticated'
   const { data: session, status } = useSession()
   const isLoggedIn = status === 'authenticated'
@@ -44,7 +44,7 @@ export default function Navbar() {
     <header style={{
       background: 'var(--navbar-bg)',
       borderBottom: '1px solid var(--navbar-border)'
-    }}>
+    }} className="md:sticky top-0 z-15">  
       <nav className="mx-auto flex justify-between items-center w-[95%] py-2">
 
         {/* ── Logo ─────────────────────────────────── */}

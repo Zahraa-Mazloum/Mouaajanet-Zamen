@@ -31,13 +31,25 @@
     "hasAccount": "Already have an account? Sign in",
     "forgotPassword": "Forgot password?",
     "enterOtp": "Enter Verification Code",
-    "otpSent": "We sent a 6-digit code to {phone} on WhatsApp",
+    "otpSent": "We sent a 6-digit code on WhatsApp",
     "verify": "Verify",
     "verifying": "Verifying...",
     "resendOtp": "Resend code",
     "backToPhone": "← Use a different number",
     "setPassword": "Set Your Password",
-    "setPasswordHint": "Choose a strong password for your account"
+    "setPasswordHint": "Choose a strong password for your account",
+    "networkError": "Network error. Please check your connection.",
+    "passwordMismatch": "Passwords do not match.",
+    "sending": "Sending...",
+    "sendWhatsappCode": "Send WhatsApp Code",
+    "newpassword": "New Password",
+    "updating": "Updating...",
+    "updatePassword": "Update Password",
+    "back": " ← Go back",
+    "resendIn": "Resend in",
+    "notReceive": "Didn't receive it?",
+    "digitCode": "6-Digit Code"
+  
   },
   "common": {
     "loading": "Loading...",

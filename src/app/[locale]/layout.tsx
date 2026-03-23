@@ -18,10 +18,10 @@ const inter = Inter({
 
 // ── Arabic font ───────────────────────────────────────────
 const cairo = Cairo({
-  subsets: ['arabic', 'latin'],  // ← arabic subset is what renders Arabic glyphs
+  subsets: ['arabic', 'latin'], 
   variable: '--font-cairo',
   display: 'swap',
-  weight: ['400', '600', '700'], // load the weights you use
+  weight: ['400', '600', '700'],
 })
 
 export const metadata: Metadata = {

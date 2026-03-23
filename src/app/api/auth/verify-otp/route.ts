@@ -19,7 +19,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.issues[1].message },
+        { error: parsed.error.issues[0].message },
         { status: 400 }
       )
     }
@@ -49,17 +49,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         { status: 429 }
       )
     }
-
-    const sinch = new SinchClient({
-      applicationKey:    process.env.SINCH_APP_KEY!,
-      applicationSecret: process.env.SINCH_APP_SECRET!,
-    })
-
-    const reportData = Verification.reportVerificationByIdHelper.buildSmsRequest(
-      otpDoc.code, // sinchId — which verification to report against
-      code,        // the code the user typed
-    )
-if (process.env.NODE_ENV === 'development' && otpDoc.code === 'DEV_BYPASS') {
+    if (process.env.NODE_ENV === 'development' && otpDoc.code === 'DEV_BYPASS') {
   if (code !== '123456') {
     await OtpVerification.updateOne(
       { _id: otpDoc._id },
@@ -71,9 +61,17 @@ if (process.env.NODE_ENV === 'development' && otpDoc.code === 'DEV_BYPASS') {
     )
   }
 }
-
 // ── PRODUCTION: Sinch verification ────────────────────────
 else {
+      const sinch = new SinchClient({
+      applicationKey:    process.env.SINCH_APP_KEY!,
+      applicationSecret: process.env.SINCH_APP_SECRET!,
+    })
+
+    const reportData = Verification.reportVerificationByIdHelper.buildSmsRequest(
+      otpDoc.code, // sinchId — which verification to report against
+      code,        // the code the user typed
+    )
     try {
       const response = await sinch.verification.verifications.reportSmsById(reportData)
 
