@@ -33,7 +33,6 @@ export interface IOrder extends Document {
   _id:              mongoose.Types.ObjectId
   orderNumber:      string
   userId:           mongoose.Types.ObjectId | null
-  branchId:         mongoose.Types.ObjectId
   channel:          OrderChannel
   type:             OrderType
   status:           OrderStatus
@@ -71,7 +70,6 @@ const OrderPaymentSchema = new Schema<IOrderPayment>({
 const OrderSchema = new Schema<IOrder>({
   orderNumber:      { type: String, required: true, unique: true },
   userId:           { type: Schema.Types.ObjectId, ref: 'User', default: null },
-  branchId:         { type: Schema.Types.ObjectId, ref: 'Branch', required: true },
   channel:          { type: String, enum: ['online','pos','phone'], required: true },
   type:             { type: String, enum: ['pickup','delivery'], required: true },
   status:           { type: String, enum: ['pending','confirmed','preparing','ready','out_for_delivery','delivered','cancelled'], default: 'pending' },
@@ -88,7 +86,6 @@ const OrderSchema = new Schema<IOrder>({
 })
 
 OrderSchema.index({ userId: 1 })
-OrderSchema.index({ branchId: 1, status: 1 })
 OrderSchema.index({ createdAt: -1 })
 OrderSchema.index({ orderNumber: 1 }, { unique: true })
 OrderSchema.index({ offlineId: 1 }, { sparse: true, unique: true })
